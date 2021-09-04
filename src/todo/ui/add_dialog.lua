@@ -40,26 +40,29 @@ function todo.create_add_task_dialog(player)
         name = "todo_new_task_textbox"
     })
 
-    table.add({
-        type = "label",
-        style = "todo_label_default",
-        name = "todo_add_assignee_label",
-        caption = { todo.translate(player, "add_assignee") }
-    })
-
     local players, lookup, c = todo.get_player_list(player)
 
-    local assign_index = 1
-    if todo.is_auto_assign(player) and c == 1 then
-        assign_index = lookup[player.name]
+    -- Only show the assignee section if we allow task ownership currently
+    if todo.is_task_ownership(player) then
+        table.add({
+            type = "label",
+            style = "todo_label_default",
+            name = "todo_add_assignee_label",
+            caption = { todo.translate(player, "add_assignee") }
+        })
+        
+        local assign_index = 1
+        if todo.is_auto_assign(player) and c == 1 then
+            assign_index = lookup[player.name]
+        end
+        table.add({
+            type = "drop-down",
+            style = "todo_dropdown_default",
+            name = "todo_add_assignee_drop_down",
+            items = players,
+            selected_index = assign_index
+        })
     end
-    table.add({
-        type = "drop-down",
-        style = "todo_dropdown_default",
-        name = "todo_add_assignee_drop_down",
-        items = players,
-        selected_index = assign_index
-    })
 
     table.add({
         type = "checkbox",

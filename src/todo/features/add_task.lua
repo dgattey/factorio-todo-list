@@ -26,7 +26,9 @@ function todo.get_task_from_add_dialog(dialog)
 
     local assignees = dialog.todo_add_task_table["todo_add_assignee_drop_down"]
     local assignee
-    if (assignees.selected_index > 1) then
+
+    -- There may be no assignees if task ownership is disabled
+    if (assignees and assignees.selected_index > 1) then
         assignee = assignees.items[assignees.selected_index]
     end
 

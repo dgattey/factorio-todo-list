@@ -86,6 +86,10 @@ function todo.should_show_maximize_button(player)
     return settings.get_player_settings(player)["todolist-show-button"].value
 end
 
+function todo.is_task_ownership(player)
+    return settings.get_player_settings(player)["todolist-enable-task-ownership"].value
+end
+
 function todo.is_auto_assign(player)
     return settings.get_player_settings(player)["todolist-auto-assign"].value
 end

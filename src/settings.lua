@@ -24,6 +24,14 @@ data:extend({
 		per_user = true,
 	},
 	{
+		name = "todolist-enable-task-ownership",
+		setting_type = "runtime-per-user",
+		type = "bool-setting",
+		default_value = true,
+		order = "tl-b",
+		per_user = true,
+	},
+	{
 		name = "todolist-auto-assign",
 		setting_type = "runtime-per-user",
 		type = "bool-setting",

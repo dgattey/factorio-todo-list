@@ -44,11 +44,14 @@ function todo.edit_persist_task_changes(player, id)
     original.title = dialog.todo_edit_task_table["todo_edit_task_title"].text
     original.task = dialog.todo_edit_task_table["todo_edit_task_textbox"].text
 
+    -- There may be no assignees if task ownership is disabled (and no need to change the original)
     local assignees = dialog.todo_edit_task_table["todo_edit_assignee_drop_down"]
-    if (assignees.selected_index > 1) then
-        original.assignee = assignees.items[assignees.selected_index]
-    else
-        original.assignee = nil
+    if (assignees) then
+        if (assignees.selected_index > 1) then
+            original.assignee = assignees.items[assignees.selected_index]
+        else
+            original.assignee = nil
+        end
     end
 
     original.updated_by = player.name

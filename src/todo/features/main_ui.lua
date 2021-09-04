@@ -112,19 +112,31 @@ function todo.update_current_task_label(player)
     todo.log("updating button label")
     local count = 0
     for _, task in pairs(global.todo.open) do
-        if task.assignee == player.name then
-            todo.log(serpent.block(task))
+        if todo.is_task_ownership(player) then
+            -- If we're using ownership, then grab the first assigned task for the player
+            if task.assignee == player.name then
+                todo.log(serpent.block(task))
+                todo.get_maximize_button(player).caption = { "",
+                                                            { todo.translate(player, "todo_list") },
+                                                            ": ",
+                                                            task.title
+                }
+                return
+            end
+
+            -- only count tasks that are assignable
+            if (not task.assignee) then
+                count = count + 1
+            end
+        else
+            -- If we're not using task ownership, just show the first task on the button label
+            todo.log('Showing first task on button', serpent.block(task))
             todo.get_maximize_button(player).caption = { "",
-                                                         { todo.translate(player, "todo_list") },
-                                                         ": ",
-                                                         task.title
+                                                        { todo.translate(player, "todo_list") },
+                                                        ": ",
+                                                        task.title
             }
             return
-        end
-
-        -- only count tasks that are assignable
-        if (not task.assignee) then
-            count = count + 1
         end
     end
 

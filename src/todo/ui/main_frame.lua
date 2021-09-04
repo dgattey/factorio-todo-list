@@ -96,13 +96,22 @@ function todo.create_task_table(frame, player)
         name = "todo_title_task",
         caption = { todo.translate(player, "title_task") }
     })
-
-    table.add({
-        type = "label",
-        style = "todo_label_default",
-        name = "todo_title_assignee",
-        caption = { todo.translate(player, "title_assignee")}
-    })
+    -- Only show the assignee column if we allow task ownership currently
+    if todo.is_task_ownership(player) then
+        table.add({
+            type = "label",
+            style = "todo_label_default",
+            name = "todo_title_assignee",
+            caption = { todo.translate(player, "title_assignee")}
+        })
+    else 
+        table.add({
+            type = "label",
+            style = "todo_label_default",
+            name = "todo_title_assignee",
+            caption = ""
+        })
+    end
 
     table.add({
         type = "label",
@@ -171,19 +180,29 @@ function todo.add_task_to_table(player, table, task, completed, is_first, is_las
         caption = task.title
     })
 
-    if (task.assignee) then
+    -- Only show the assignee cell if we allow ownership (otherwise blank)
+    if todo.is_task_ownership(player) then
+        if (task.assignee) then
+            table.add({
+                type = "label",
+                style = "todo_label_default",
+                name = "todo_main_task_assignee_" .. id,
+                caption = task.assignee
+            })
+        else
+            table.add({
+                type = "button",
+                style = "todo_button_default",
+                name = "todo_take_task_button_" .. id,
+                caption = { todo.translate(player, "assign_self") }
+            })
+        end
+    else
         table.add({
             type = "label",
             style = "todo_label_default",
             name = "todo_main_task_assignee_" .. id,
-            caption = task.assignee
-        })
-    else
-        table.add({
-            type = "button",
-            style = "todo_button_default",
-            name = "todo_take_task_button_" .. id,
-            caption = { todo.translate(player, "assign_self") }
+            caption = ""
         })
     end
 

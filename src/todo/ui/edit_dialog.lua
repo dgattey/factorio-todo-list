@@ -48,28 +48,31 @@ function todo.create_edit_task_dialog(player, id)
         text = task.task
     })
 
-    table.add({
-        type = "label",
-        style = "todo_label_default",
-        name = "todo_edit_assignee_label",
-        caption = { todo.translate(player, "add_assignee") }
-    })
+    -- Only show the assignee section if we allow task ownership currently
+    if todo.is_task_ownership(player) then
+        table.add({
+            type = "label",
+            style = "todo_label_default",
+            name = "todo_edit_assignee_label",
+            caption = { todo.translate(player, "add_assignee") }
+        })
 
-    local players, lookup, c = todo.get_player_list(player)
+        local players, lookup, c = todo.get_player_list(player)
 
-    local assign_index = 1
-    if task and task.assignee then
-        assign_index = lookup[task.assignee]
-    elseif todo.is_auto_assign(player) and c == 1 then
-        assign_index = lookup[player.name]
+        local assign_index = 1
+        if task and task.assignee then
+            assign_index = lookup[task.assignee]
+        elseif todo.is_auto_assign(player) and c == 1 then
+            assign_index = lookup[player.name]
+        end
+        table.add({
+            type = "drop-down",
+            style = "todo_dropdown_default",
+            name = "todo_edit_assignee_drop_down",
+            items = players,
+            selected_index = assign_index
+        })
     end
-    table.add({
-        type = "drop-down",
-        style = "todo_dropdown_default",
-        name = "todo_edit_assignee_drop_down",
-        items = players,
-        selected_index = assign_index
-    })
 
     table.add({
         type = "label",
