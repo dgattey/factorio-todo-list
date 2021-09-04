@@ -4,6 +4,7 @@ data:extend({
 		setting_type = "runtime-per-user",
 		type = "bool-setting",
 		default_value = true,
+		order = "tl-a",
 		per_user = true,
 	},
 	{
@@ -11,6 +12,7 @@ data:extend({
 		setting_type = "runtime-per-user",
 		type = "bool-setting",
 		default_value = false,
+		order = "tl-f",
 		per_user = true,
 	},
 	{
@@ -18,6 +20,7 @@ data:extend({
 		setting_type = "runtime-per-user",
 		type = "int-setting",
 		default_value = 600,
+		order = "tl-e",
 		per_user = true,
 	},
 	{
@@ -25,6 +28,7 @@ data:extend({
 		setting_type = "runtime-per-user",
 		type = "bool-setting",
 		default_value = false,
+		order = "tl-ba",
 		per_user = true,
 	},
 	{
@@ -33,6 +37,7 @@ data:extend({
 		type = "string-setting",
 		allowed_values = {"right-button", "middle-button"},
 		default_value = "right-button",
+		order = "tl-c",
 		per_user = true,
 	},
 	{
@@ -41,6 +46,7 @@ data:extend({
 		type = "string-setting",
 		allowed_values = {"default", "quest"},
 		default_value = "default",
+		order = "tl-d",
 		per_user = true,
 	}
 })
