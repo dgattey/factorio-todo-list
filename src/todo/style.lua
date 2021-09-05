@@ -7,14 +7,23 @@ data:extend({
         from = "default",
         size = 14
     },
-})
-
-data:extend({
+    {
+        type = "font",
+        name = "todo_font_semibold",
+        from = "default-semibold",
+        size = 14
+    },
     {
         type = "font",
         name = "todo_font_subheading",
         from = "default",
         size = 18
+    },
+    {
+        type = "font",
+        name = "todo_font_smaller",
+        from = "default",
+        size = 13
     }
 })
 
@@ -57,6 +66,18 @@ default_gui["todo_label_task"] = {
     single_line = false
 }
 
+default_gui["todo_label_title_task"] = {
+    type = "label_style",
+    font = "todo_font_semibold",
+    single_line = false
+}
+
+default_gui["todo_label_subtask"] = {
+    type = "label_style",
+    font = "todo_font_smaller",
+    single_line = false
+}
+
 default_gui["todo_textbox_default"] = {
     type = "textbox_style",
     font = "todo_font_default",
@@ -91,7 +112,15 @@ default_gui["todo_frame_add_where"] = {
 
 default_gui["todo_checkbox_default"] = {
     type = "checkbox_style",
-    font = "todo_font_default"
+    font = "todo_font_default",
+    maximal_width = 500,
+}
+
+default_gui["todo_checkbox_subtask"] = {
+    type = "checkbox_style",
+    parent = "todo_checkbox_default",
+    font = "todo_font_smaller",
+    single_line = false
 }
 
 default_gui["todo_radiobutton_default"] = {

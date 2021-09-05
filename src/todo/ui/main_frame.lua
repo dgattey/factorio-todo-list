@@ -71,9 +71,8 @@ function todo.create_task_table(frame, player)
 
     scroll.vertical_scroll_policy = "auto"
     scroll.horizontal_scroll_policy = "never"
-    scroll.style.maximal_height = todo.get_window_height(player)
-    scroll.style.minimal_height = scroll.style.maximal_height
-
+    scroll.style.height = todo.get_window_height(player)
+    
     local table = scroll.add({
         type = "table",
         style = "todo_table_default",
@@ -158,6 +157,53 @@ function todo.create_task_table(frame, player)
     return table
 end
 
+-- Adds just the details + subtasks of a task to a table.
+-- If you're adding these somewhere outside the main task list,
+-- provide an add_task_suffix, otherwise you won't be able to
+-- distiguish between the main add button and your new one when
+-- adding subtasks. Don't forget to register the new click event.
+function todo.add_task_details_to_table(player, table, task, add_task_suffix)
+
+    -- Add a row for the description/details in small font if it's there
+    if (task.task and string.len(task.task) > 0) then
+        table.add({
+            type = "label",
+            style = "todo_label_default",
+            name = "todo_main_expanded_1_" .. task.id,
+            caption = ""
+        })
+        local task_description = table.add({
+            type = "label",
+            style = "todo_label_subtask",
+            name = "todo_main_expanded_task_label_" .. task.id,
+            caption = "[color=#CCCCCC]" .. task.task .. "[/color]"
+        })
+        task_description.style.maximal_width = MAX_TEXT_ELEMENT_WIDTH
+        task_description.style.bottom_padding = 6
+
+        -- fill up the row with empty cells
+        for _, i in pairs({ 2, 3, 4, 5, 6, 7, 8 }) do
+            table.add({
+                type = "label",
+                style = "todo_label_default",
+                name = "todo_main_expanded_" .. i .. "_" .. task.id,
+                caption = ""
+            })
+        end
+    end
+
+    -- Adds all subtasks + a row to add a new one
+    todo.add_subtasks_to_task_table(player, table, task, add_task_suffix)
+
+    -- Add mostly empty row to make visual spacing between bottom of subtasks and the next task
+    local row = {{
+        type = "flow",
+        name = "todo_task_spacer" .. task.id,
+    }}
+    todo.add_row_to_main_table(table, row)
+end
+
+-- Adds a full task + its details + subtasks if expanded
 function todo.add_task_to_table(player, table, task, completed, is_first, is_last, expanded)
     local id = task.id
 
@@ -172,13 +218,14 @@ function todo.add_task_to_table(player, table, task, completed, is_first, is_las
         name = checkbox_name .. id,
         state = completed
     })
-
-    table.add({
+    local task_title = table.add({
         type = "label",
-        style = "todo_label_task",
+        style = "todo_label_title_task",
         name = "todo_main_task_title_" .. id,
         caption = task.title
     })
+    task_title.style.width = 100
+    task_title.style.maximal_width = MAX_TEXT_ELEMENT_WIDTH
 
     -- Only show the assignee cell if we allow ownership (otherwise blank)
     if todo.is_task_ownership(player) then
@@ -266,6 +313,7 @@ function todo.add_task_to_table(player, table, task, completed, is_first, is_las
         tooltip = { todo.translate(player, "title_edit") }
     })
 
+    -- Create a details section, with open or closed button. Has subtasks below if expanded
     if (expanded) then
         table.add({
             type = "sprite-button",
@@ -274,33 +322,7 @@ function todo.add_task_to_table(player, table, task, completed, is_first, is_las
             sprite = "utility/speed_up",
             tooltip = { "todo.title_details" }
         })
-
-        -- details view is a new row
-        table.add({
-            type = "label",
-            style = "todo_label_default",
-            name = "todo_main_expanded_1_" .. id,
-            caption = ""
-        })
-
-        table.add({
-            type = "label",
-            style = "todo_label_task",
-            name = "todo_main_expanded_task_label_" .. id,
-            caption = task.task
-        })
-
-        -- fill up the row with empty cells
-        for _, i in pairs({ 2, 3, 4, 5, 6, 7, 8 }) do
-            table.add({
-                type = "label",
-                style = "todo_label_default",
-                name = "todo_main_expanded_" .. i .. "_" .. id,
-                caption = ""
-            })
-        end
-
-        todo.add_subtasks_to_task_table(player, table, task)
+        todo.add_task_details_to_table(player, table, task)
     else
         table.add({
             type = "sprite-button",
@@ -361,10 +383,11 @@ function todo.add_subtask_to_main_table(player, table, task_id, subtask, is_firs
 
     row[2] = {
         type = "checkbox",
-        style = "todo_checkbox_default",
+        style = "todo_checkbox_subtask",
         name = string.format("todo_main_subtask_checkbox_%i_%i", task_id, subtask_id),
         state = done,
-        caption = subtask.task
+        caption = subtask.task,
+        tooltip = subtask.task
     }
 
     -- completed subtasks cannot be sorted or edited

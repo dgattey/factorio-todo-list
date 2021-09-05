@@ -13,9 +13,8 @@ function todo.create_export_dialog(player)
 
     scroll.vertical_scroll_policy = "auto"
     scroll.horizontal_scroll_policy = "never"
-    scroll.style.maximal_height = todo.get_window_height(player) / 2
-    scroll.style.minimal_height = scroll.style.maximal_height
-
+    scroll.style.height = todo.get_window_height(player) / 2
+    
     local table = scroll.add({
         type = "table",
         style = "todo_table_default",
