@@ -3,9 +3,16 @@ MAX_TEXT_ELEMENT_WIDTH = 500
 
 local TITLE_BAR_NAME = 'title_bar'
 
--- Creates the contents of the title bar, adding the caption + close button if provided
-function todo.populate_title_bar(player, frame, title_bar, name, caption, close_name)
-    -- Left side of the bar has the title itself (and is draggable)
+-- Creates the contents of the title bar, adding the caption + close button if provided,
+-- and including pre_title_elements (if any) before the title itself. Same thing with
+-- pre_close_elements - they get prepended to the close button on the right side.
+function todo.populate_title_bar(player, frame, title_bar, name, caption, close_name, pre_title_elements, pre_close_elements)
+    -- Left side of the bar has pretitle elements + the title itself (and is draggable)
+    if pre_title_elements ~= nil then
+        for _, element in pairs(pre_title_elements) do
+            title_bar.add(element)
+        end
+    end
     local title = title_bar.add({
         type = "label",
         caption = caption,
@@ -23,7 +30,12 @@ function todo.populate_title_bar(player, frame, title_bar, name, caption, close_
     dragger.style.horizontally_stretchable = true
     dragger.drag_target = frame
 
-    -- Right side of the bar has the close button if defined
+    -- Right side of the bar has preclose elements and the close button if defined
+    if pre_close_elements ~= nil then
+        for _, element in pairs(pre_close_elements) do
+            title_bar.add(element)
+        end
+    end
     if close_name ~= nil then
         title_bar.add({
             type = "sprite-button",
@@ -35,7 +47,7 @@ function todo.populate_title_bar(player, frame, title_bar, name, caption, close_
 end
 
 -- Creates a frame, adding a title bar to it
-function todo.create_frame(player, name, caption, close_name)
+function todo.create_frame(player, name, caption, close_name, pre_title_elements, pre_close_elements)
     local frame = player.gui.screen.add({
         type = "frame",
         name = name,
@@ -47,18 +59,18 @@ function todo.create_frame(player, name, caption, close_name)
         type = "flow",
         name = TITLE_BAR_NAME
     })
-    todo.populate_title_bar(player, frame, title_bar, name, caption, close_name)
+    todo.populate_title_bar(player, frame, title_bar, name, caption, close_name, pre_title_elements, pre_close_elements)
 
     return frame
 end
 
 -- Assumes the frame + title in the frame have been created already! Used to update
 -- the title bar if anything needs to change.
-function todo.update_titlebar_of_frame(player, frame_name, caption, close_name)
+function todo.update_titlebar_of_frame(player, frame_name, caption, close_name, pre_title_elements, pre_close_elements)
     local frame = player.gui.screen[frame_name]
     local title_bar = frame[TITLE_BAR_NAME]
     for _, element in pairs(title_bar.children) do
         element.destroy()
     end
-    todo.populate_title_bar(player, frame, title_bar, name, caption, close_name)
+    todo.populate_title_bar(player, frame, title_bar, name, caption, close_name, pre_title_elements, pre_close_elements)
 end

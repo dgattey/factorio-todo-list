@@ -34,6 +34,10 @@ script.on_event(defines.events.on_gui_closed, function(event)
     elseif event.element and event.element.name == "todo_edit_dialog" then
         local player = game.get_player(event.player_index)
         todo.on_edit_cancel_click(player)
+    elseif event.element and string.find(element.element.name, "todo_breakout_window_") then
+        local player = game.get_player(event.player_index)
+        local id = todo.get_task_id_from_element_name(element.element.name)
+        todo.close_breakout_window(player, id)
     end
 end)
 

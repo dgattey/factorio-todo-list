@@ -2,12 +2,19 @@
     Business logic for manipulating subtasks
 ]]--
 
-function todo.on_save_new_subtask_click(player, task_id)
+-- use_breakout is used to grab data from the breakout window instead of the main table
+function todo.on_save_new_subtask_click(player, task_id, use_breakout)
 
     local task = todo.get_task_by_id(task_id)
+    local textfield
 
-    local task_table = todo.get_task_table(player)
-    local textfield = task_table["todo_main_subtask_new_text_" .. task_id]
+    if use_breakout then
+        local task_table = todo.get_breakout_window_table(player, task_id)
+        textfield = task_table["todo_main_subtask_new_text_breakout_" .. task_id]
+    else
+        local task_table = todo.get_task_table(player)
+        textfield = task_table["todo_main_subtask_new_text_" .. task_id]
+    end
 
     todo.save_subtask_to_task(task, textfield.text)
 

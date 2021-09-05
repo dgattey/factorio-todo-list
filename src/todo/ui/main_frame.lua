@@ -44,7 +44,7 @@ function todo.create_maximized_frame(player)
         type = "sprite-button",
         style = "todo_sprite_button_default",
         name = "todo_main_open_export_dialog_button",
-        sprite = "utility/export_slot",
+        sprite = "utility/export",
         tooltip = { todo.translate(player, "export") }
     })
     todo.update_export_dialog_button_state()
@@ -53,7 +53,7 @@ function todo.create_maximized_frame(player)
         type = "sprite-button",
         style = "todo_sprite_button_default",
         name = "todo_main_open_import_dialog_button",
-        sprite = "utility/import_slot",
+        sprite = "utility/import",
         tooltip = { todo.translate(player, "import") }
     })
 
@@ -313,9 +313,14 @@ function todo.add_task_to_table(player, table, task, completed, is_first, is_las
         tooltip = { todo.translate(player, "title_edit") }
     })
 
-    -- Create a details section, with open or closed button. Has subtasks below if expanded
+    -- Create a details section, with open or closed button, and a breakout button next to it. Has subtasks below if expanded
+    local flow = table.add({
+        type = "flow",
+        name = "todo_details_flow_" .. id,
+        direction = "horizontal"
+    })
     if (expanded) then
-        table.add({
+        flow.add({
             type = "sprite-button",
             style = "todo_sprite_button_default",
             name = "todo_main_close_details_button_" .. id,
@@ -324,7 +329,7 @@ function todo.add_task_to_table(player, table, task, completed, is_first, is_las
         })
         todo.add_task_details_to_table(player, table, task)
     else
-        table.add({
+        flow.add({
             type = "sprite-button",
             style = "todo_sprite_button_default",
             name = "todo_main_open_details_button_" .. id,
@@ -332,9 +337,17 @@ function todo.add_task_to_table(player, table, task, completed, is_first, is_las
             tooltip = { "todo.title_details" }
         })
     end
+    flow.add({
+        type = "sprite-button",
+        style = "todo_sprite_button_default",
+        name = "todo_main_breakout_button_" .. id,
+        sprite = "utility/export_slot",
+        tooltip = { "todo.breakout_task" }
+    })
 end
 
-function todo.add_subtasks_to_task_table(player, table, task)
+-- Use the add_task_suffix when you are placing subtasks outside the main todo list table
+function todo.add_subtasks_to_task_table(player, table, task, add_task_suffix)
     -- for each subtask
     if (task.subtasks) then
         local open_subtask_count = #task.subtasks.open
@@ -351,19 +364,24 @@ function todo.add_subtasks_to_task_table(player, table, task)
         end
     end
 
-    -- add new subtask
+    -- add new subtask, using suffix if it exists
+    local full_id = task.id
+    if add_task_suffix ~= nil then
+        full_id = add_task_suffix .. task.id
+    end
     local row = { "done", "task", "take", "top", "up", "down", "bottom", "edit", "delete" }
+    todo.log("todo_main_subtask_new_text_" .. full_id)
 
     row[2] = {
         type = "textfield",
         style = "todo_textfield_default",
-        name = "todo_main_subtask_new_text_" .. task.id
+        name = "todo_main_subtask_new_text_" .. full_id
     }
 
     row[8] = {
         type = "sprite-button",
         style = "todo_sprite_button_default",
-        name = "todo_main_subtask_save_new_button_" .. task.id,
+        name = "todo_main_subtask_save_new_button_" .. full_id,
         sprite = "utility/add",
         tooltip = { todo.translate(player, "add_subtask") }
     }

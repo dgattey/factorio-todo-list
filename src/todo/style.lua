@@ -55,6 +55,14 @@ default_gui["todo_sprite_button_default"] = {
     height = 36
 }
 
+-- White font, padding on right, for use next to close button in header
+default_gui["todo_in_title_button_default"] = {
+    type = "button_style",
+    parent = "frame_action_button",
+    right_margin = 4,
+    default_font_color = {1, 1, 1} 
+}
+
 default_gui["todo_label_default"] = {
     type = "label_style",
     font = "todo_font_default",
@@ -121,6 +129,14 @@ default_gui["todo_checkbox_subtask"] = {
     parent = "todo_checkbox_default",
     font = "todo_font_smaller",
     single_line = false
+}
+
+default_gui["todo_checkbox_in_title"] = {
+    type = "checkbox_style",
+    parent = "todo_checkbox_default",
+    font = "todo_font_default",
+    size = 24,
+    margin = 0
 }
 
 default_gui["todo_radiobutton_default"] = {

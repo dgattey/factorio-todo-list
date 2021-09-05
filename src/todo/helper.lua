@@ -52,13 +52,13 @@ end
 function todo.get_task_by_id(id)
     for _, task in pairs(global.todo.open) do
         if (task.id == id) then
-            return task
+            return task, 'open'
         end
     end
 
     for _, task in pairs(global.todo.done) do
         if (task.id == id) then
-            return task
+            return task, 'done'
         end
     end
 end

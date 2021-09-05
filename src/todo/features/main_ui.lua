@@ -72,8 +72,8 @@ function todo.update_main_task_list_for_everyone()
 end
 
 function todo.refresh_task_table(player)
-
     todo.update_current_task_label(player)
+    todo.refresh_breakout_windows(player)
 
     -- if the player has the UI minimized do nothing
     local main_frame = todo.get_main_frame(player)

@@ -27,6 +27,7 @@ require("todo/ui/edit_dialog")
 require("todo/ui/edit_subtask_dialog")
 require("todo/ui/export_dialog")
 require("todo/ui/import_dialog")
+require("todo/ui/breakout_window")
 require("todo/ui/main_frame")
 
 -- convenience
@@ -156,10 +157,22 @@ function todo.on_gui_click(event)
         local id = todo.get_task_id_from_element_name(element.name, "todo_main_close_details_button_")
 
         todo.on_hide_task_details_click(player, id)
+    elseif (string.find(element.name, "todo_main_breakout_button_")) then
+        local id = todo.get_task_id_from_element_name(element.name, "todo_main_breakout_button_")
+
+        todo.create_breakout_window(player, id)
+    elseif (string.find(element.name, "todo_minimize_breakout_window_")) then
+        local id = todo.get_task_id_from_element_name(element.name, "todo_minimize_breakout_window_")
+
+        todo.close_breakout_window(player, id)
+    elseif (string.find(element.name, "todo_main_subtask_save_new_button_breakout_")) then
+        local id = todo.get_task_id_from_element_name(element.name, "todo_main_subtask_save_new_button_breakout_")
+
+        todo.on_save_new_subtask_click(player, id, true)
     elseif (string.find(element.name, "todo_main_subtask_save_new_button_")) then
         local id = todo.get_task_id_from_element_name(element.name, "todo_main_subtask_save_new_button_")
 
-        todo.on_save_new_subtask_click(player, id)
+        todo.on_save_new_subtask_click(player, id, false)
     elseif (string.find(element.name, "todo_main_subtask_edit_button_")) then
         local task_id, subtask_id = todo.get_task_id_from_element_name(element.name, "todo_main_subtask_edit_button_")
 
