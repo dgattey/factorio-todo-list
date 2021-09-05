@@ -1,9 +1,12 @@
 -- TODO: String format support missing
 function todo.log(message)
+    if (message == nil) then
+        message = '<nil>'
+    end
     if type(message) == 'table' then
         message = serpent.dump(message) .. ' [' .. #message .. ']'
     end
-    message = "" .. message or '<nil>'
+    message = "" .. message
 
     if game then
         for _, p in pairs(game.players) do
